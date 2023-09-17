@@ -13,8 +13,8 @@ mydb = mysql.connector.connect(
 mycursor = mydb.cursor()
 
 def authenticateion_user():
-    account_number = int(input("Enter your account number: "))
-    pin = int(input("Enter your PIN: "))
+    account_number = int(input("Enter the user account number: "))
+    pin = int(input("Enter the PIN: "))
 
     sql = "SELECT * FROM users WHERE account_number = %s AND pin_admin = %s"
     mycursor.execute(sql, (account_number, pin))
@@ -54,5 +54,42 @@ def main_function():
         except ValueError:
             print("Please type a number only.")
 
+
+def admin_authenticateion():
+    admin_id = int(input("Enter your admin ID: "))
+    pin = int(input("Enter your PIN: "))
+
+    sql = "SELECT * FROM admin_login WHERE admin_id = %s AND pin_number = %s"
+    mycursor.execute(sql, (admin_id, pin))
+    user = mycursor.fetchone()
+
+    if user:
+        return user
+    else:
+        print("Authentication failed. Please try again.")
+        return None
+
+
+def admin_login():
+    print("Admin login")
+    user = None
+
+    while not user:
+        user = admin_authenticateion()
+    
+    while True:
+        print("Do you want to see users account")
+        print("If yes press 1")
+        print("If no press 2")
+        
+        try:
+            admin_choice = int(input("Enter your choice number: "))
+            if admin_choice == 1:  
+                main_function()
+            elif admin_choice == 2:  
+                sys.exit()
+        except ValueError:
+            print("Please type yes or no.")
+
 if __name__ == "__main__":
-    main_function()
+    admin_login()
